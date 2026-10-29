@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>FinanceApp</title>
+<meta name="theme-color" content="#3a47a6">
+<meta name="color-scheme" content="light dark">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="favicon.png" type="image/png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="FinanceApp">
+<style>
+:root{--bg:#f6f7fb;--card:#fff;--text:#1d2233;--muted:#6b7288;--line:#dfe3ee;--accent:#3a47a6;--accent2:#98dce0;
+--ok:#16a34a;--bad:#dc2626;--warn:#b45309;--okbg:#e7f6ec;--badbg:#fdeaea;--warnbg:#fff4e0;--infobg:#e9eefc;}
+@media (prefers-color-scheme:dark){:root{--bg:#12141c;--card:#1b1f2b;--text:#e8eaf2;--muted:#9aa1b8;--line:#2c3244;--accent:#7f8cf0;
+--okbg:#163323;--badbg:#3a1b1b;--warnbg:#3a2c12;--infobg:#1e2745;}}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--text);font:16px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
+main{max-width:980px;margin:0 auto;padding:14px 14px 40px}
+h1{font-size:1.35rem;margin:0;flex:1}h2{font-size:1.15rem;margin:.6rem 0}h3{margin:.2rem 0 .8rem;color:var(--muted);font-weight:500}
+hr{border:0;border-top:1px solid var(--line);margin:18px 0}
+.top{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.top img{border-radius:8px}
+.muted{color:var(--muted);font-size:.9rem}.foot{text-align:center;margin-top:24px}
+.selectors{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.field{display:flex;flex-direction:column;gap:4px;font-size:.9rem;color:var(--muted);margin:8px 0}
+input,select,button{font:inherit}
+input[type=number],input[type=text],input[type=date],select{width:100%;padding:10px 12px;border:1px solid var(--line);
+border-radius:10px;background:var(--card);color:var(--text)}
+.btn{padding:10px 14px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--text);cursor:pointer}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+.btn.danger{background:var(--bad);border-color:var(--bad);color:#fff}
+.btn.small{padding:5px 10px;font-size:.85rem;margin-left:8px}
+.btn:active{opacity:.8}
+.btnrow{display:flex;gap:10px;flex-wrap:wrap;margin:12px 0}
+.icon{background:none;border:0;cursor:pointer;font-size:1.1rem;padding:6px}.icon.big{font-size:1.4rem}
+.rowtop{display:flex;gap:10px;align-items:flex-start;margin-top:12px}
+.rowtop details{flex:1;min-width:0}.recsbtn{white-space:nowrap}
+details{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 14px}
+details>summary{cursor:pointer;font-weight:600}
+details[open]>summary{margin-bottom:8px}
+.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:10px 0}
+.metrics.three{grid-template-columns:repeat(3,1fr);margin-top:18px}
+.metrics.four{grid-template-columns:repeat(4,1fr)}
+.metric{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px}
+.mlabel{color:var(--muted);font-size:.8rem}.mvalue{font-size:1.25rem;font-weight:650;margin-top:2px}
+.delta{font-size:.8rem;margin-top:2px}.pos{color:var(--ok)}.neg{color:var(--bad)}
+.banner{border-radius:10px;padding:10px 12px;margin:10px 0;font-size:.92rem}
+.banner.ok{background:var(--okbg)}.banner.err{background:var(--badbg);color:var(--bad)}
+.banner.warn{background:var(--warnbg)}.banner.info{background:var(--infobg)}
+.txrow{border-radius:10px;padding:8px 10px;margin:8px 0;border:1px solid var(--line)}
+.txrow.expense{background:rgba(220,38,38,.10)}.txrow.income{background:rgba(22,163,74,.10)}
+.txrow.transfer{background:rgba(59,130,246,.10)}.txrow.deleted{background:rgba(128,132,149,.14)}
+.txrow.deleted .txmain>*:not(.txact){opacity:.5;text-decoration:line-through;text-decoration-color:#e53935}
+.txmain{display:grid;grid-template-columns:44px 90px 1.3fr 2fr 80px auto;gap:8px;align-items:center}
+.txamount{text-align:right;font-variant-numeric:tabular-nums}.txact{text-align:right;white-space:nowrap}
+small{opacity:.8}
+.editbox{margin-top:10px;padding-top:8px;border-top:1px dashed var(--line)}
+.rec{display:block;padding:8px 0;border-bottom:1px solid var(--line)}
+.rec input{margin-right:6px;transform:scale(1.15)}
+dialog{border:0;border-radius:16px;padding:0;width:min(720px,94vw);max-height:92vh;background:var(--card);color:var(--text)}
+dialog::backdrop{background:rgba(10,12,20,.55)}
+.dlg-inner{padding:18px;position:relative;overflow:auto;max-height:92vh}
+.close{position:absolute;right:10px;top:8px}
+[hidden]{display:none!important}
+.toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);background:#222;color:#fff;padding:10px 16px;
+border-radius:12px;opacity:0;pointer-events:none;transition:opacity .2s;max-width:92vw;z-index:50}
+.toast.show{opacity:1}.toast.err{background:#a11}
+@media (max-width:640px){
+ .metrics,.metrics.four{grid-template-columns:1fr 1fr}.metrics.three{grid-template-columns:1fr}
+ .txmain{grid-template-columns:1fr auto;grid-template-areas:"date amount" "type type" "desc desc" "id act"}
+ .txid{grid-area:id}.txdate{grid-area:date}.txtype{grid-area:type}.txdesc{grid-area:desc}.txamount{grid-area:amount}.txact{grid-area:act}
+ .rowtop{flex-direction:column}.recsbtn{width:100%}
+}
+</style>
+</head>
+<body>
+<main id="app"><p class="muted">Зареждане…</p></main>
+<div id="toast" class="toast" role="status"></div>
+
+<dialog id="recsDlg"><div class="dlg-inner"><button class="icon close" data-act="close" aria-label="Затвори">✖</button><div id="recsBody"></div></div></dialog>
+<dialog id="settingsDlg"><div class="dlg-inner"><button class="icon close" data-act="close" aria-label="Затвори">✖</button><div id="settingsBody"></div></div></dialog>
+
+<script src="logic.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
